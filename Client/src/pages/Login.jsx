@@ -1,21 +1,20 @@
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-    const user = "";
-    // eslint-disable-next-line no-unused-vars
+    const {user} = useSelector((state) => state.auth);
     const {register, handleSubmit, formState:{errors}}=  useForm();
 
    const navigate = useNavigate();
-   // eslint-disable-next-line no-unused-vars
    const submitHandler = async()=>{
     console.log("Submitted");
    }
 
     useEffect(()=>{
         user && navigate('/dashboard')
-    },[user]);
+    }, [user]);
 
 
   return (
@@ -25,9 +24,9 @@ const Login = () => {
       <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />
       <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
     </div>
-{/* Forms Start */}
+    {/* Forms Start */}
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" onSubmit={handleSubmit(submitHandler)} method="POST">
+      <form class="space-y-6" action="#" onSubmit={handleSubmit(submitHandler)} >
         <div>
           <label for="email" class="block text-sm/6 font-medium text-gray-900">Email address</label>
           <div class="mt-2">
@@ -46,7 +45,12 @@ const Login = () => {
             </div>
           </div>
           <div class="mt-2">
-            <input type="password" name="password" id="password" autocomplete="current-password" required="" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            <input type="password" name="password" id="password" autocomplete="current-password" required="" register={
+                register("password",{
+                required: "Password is required",
+            })} 
+            error = {errors.password? errors.password.message : ""   }
+            className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
           </div>
         </div>
 
