@@ -53,7 +53,7 @@ const Sidebar = () => {
         </p>
         <span className='text-2xl font-bold text-gray-800'>Donezo</span>
         </h1>
-        <p className='text-gray-500'>Welcome,{user?.name}</p>
+        <p className='text-gray-500'>Welcome, {user?.name}</p>
 
         <div className='flex flex-col flex-1 overflow-y-auto'>
           {sidebarLinks.map((link) => (
