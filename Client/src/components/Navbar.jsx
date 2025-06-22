@@ -79,6 +79,7 @@ const Navbar = () => {
             </DisclosureButton>
           </div>
           <div className="hidden lg:ml-4 lg:flex lg:items-center">
+        
             <button
               type="button"
               className="relative shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-hidden"

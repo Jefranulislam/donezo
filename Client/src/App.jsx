@@ -18,7 +18,7 @@ function Layout (){
   const location = useLocation()
   return user ? (
     <>
-    <div className='w-full h-screen flex flex-col md:flex-row'>
+    <div className='w-full h-screen flex flex-col md:flex-row bg-white'>
       <div className='w-1/5 h-screen bg-white sticky top-0 hidden md:block'>
       <Sidebar/>
       </div>
@@ -44,7 +44,7 @@ function App() {
 
   return (
 
-    <main className='w-[100vw] min-h-screen bg-[#fef4f5]'> Login
+    <main className='w-[100vw] min-h-screen bg-[#fef4f5]'> 
         <Routes>
         <Route element={<Layout/>}>
           <Route path='/' element={ <Navigate to ="/dashboard"/>} />  
