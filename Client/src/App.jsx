@@ -50,12 +50,13 @@ function App() {
           <Route path='/' element={ <Navigate to ="/dashboard"/>} />  
           <Route path='/dashboard' element= {<Dashboard/> }/>  
           <Route path='/tasks' element= {<Tasks/> }/>  
-          <Route path='/completed/:status' element= {<Tasks/> }/>  
-          <Route path='/in-process/:status' element= {<Tasks/> }/>  
-          <Route path='/todo/:status' element= {<Tasks/> }/>  
+          <Route path='/completed' element={<Tasks />} />
+          <Route path='/in-process' element={<Tasks />} />
+          <Route path='/todo' element={<Tasks />} />
           <Route path='/team' element= {<Users/> }/>  
           <Route path='/trashed' element= {<Trash/> }/>  
           <Route path='/task/:id' element= {<TaskDetails/> }/>  
+          <Route path="/tasks/:id" element={<Navigate to={({ params }) => `/task/${params.id}`} replace />} />
           </Route>
 
           <Route path='/log-in' element= {<Login/> }/>  

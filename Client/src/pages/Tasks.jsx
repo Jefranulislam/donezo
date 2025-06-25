@@ -24,12 +24,38 @@ const TASK_TYPE = {
   completed: "bg-green-400",
 };
 
+// Map possible status route params to canonical task stage values
+const STATUS_MAP = {
+  todo: "todo",
+  "to-do": "todo",
+  "to do": "todo",
+  "inprocess": "in progress",
+  "in-process": "in progress",
+  "in progress": "in progress",
+  completed: "completed",
+};
+
+const normalizeStatus = status => {
+  if (!status) return "";
+  const key = status.replace(/\s|-/g, "").toLowerCase();
+  if (key === "todo") return "todo";
+  if (key === "inprocess") return "in progress";
+  if (key === "completed") return "completed";
+  return status.replace(/\s+/g, "").toLowerCase();
+};
+
 const Tasks = () => {
   const params = useParams();
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const status = params.status || "";
+  const statusParam = params.status || "";
+  const normalizedStatus = normalizeStatus(statusParam);
+
+  // Filter tasks by normalized status if present in params
+  const filteredTasks = statusParam
+    ? tasks.filter(task => normalizeStatus(task.stage) === normalizedStatus)
+    : tasks;
 
   return loading ? (
     <div className="py-10">
@@ -38,8 +64,8 @@ const Tasks = () => {
   ) : (
     <div className="w-full">
       <div className="flex items-center justify-between mb-4">
-        <Title title={status ? `${status} Tasks ` : "Tasks"} />
-        {!status && (
+        <Title title={statusParam ? `${statusParam} Tasks ` : "Tasks"} />
+        {!statusParam && (
           <Button
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 flex items-center gap-2"
             onClick={() => setOpen(true)}
@@ -50,27 +76,24 @@ const Tasks = () => {
         )}
       </div>
       <Tabs tabs={TABS} setSelected={setSelected}>
-        {!status && (
+        {!statusParam && (
           <div className="w-full flex justify-between gap-4 md:gap-5 py-4">
-            <TaskTitle label="To Do" className={TASK_TYPE.todo}>  </TaskTitle>
-            <TaskTitle label="In progress" className={TASK_TYPE["in progress"]}>   </TaskTitle>
-            <TaskTitle label="Completed" className={TASK_TYPE.completed}>   </TaskTitle>
+            <TaskTitle label="To Do" className={TASK_TYPE.todo} />
+            <TaskTitle label="In progress" className={TASK_TYPE["in progress"]} />
+            <TaskTitle label="Completed" className={TASK_TYPE.completed} />
           </div>
         )}
-        {
-          selected === 0 ? (
-            <BoardView tasks={tasks} className="w-full">
-              {/* Board View Component */}
-              <p>Board View Content</p>
-            </BoardView>
-          ) : (
-            <Table className="w-full"  tasks={tasks}>
-              {/* List View Component */}
-              <p>List View Content</p>
-            </Table>
-          )
-        }
-
+        {selected === 0 ? (
+          <BoardView tasks={filteredTasks} className="w-full">
+            {/* Board View Component */}
+            <p>Board View Content</p>
+          </BoardView>
+        ) : (
+          <Table className="w-full" tasks={filteredTasks}>
+            {/* List View Component */}
+            <p>List View Content</p>
+          </Table>
+        )}
       </Tabs>
     </div>
   );

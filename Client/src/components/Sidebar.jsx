@@ -9,9 +9,9 @@ import { Link } from 'react-router-dom';
 const linkData = [
     {label:"Dashboard", link: "/dashboard", icon : <MdDashboard/>},
     {label:"Tasks", link: "/tasks", icon : <MdTaskAlt/>},
-    {label:"Completed", link: "/completed/completed", icon : <MdTaskAlt/>},
-    {label:"In Process", link: "/in-process/in-process", icon : <MdOutlinePendingActions/>},
-    {label:"To Do", link: "/todo/to-do", icon : <MdOutlinePendingActions/>},
+    {label:"Completed", link: "/completed", icon : <MdTaskAlt/>},
+    {label:"In Process", link: "/in-process", icon : <MdOutlinePendingActions/>},
+    {label:"To Do", link: "/todo", icon : <MdOutlinePendingActions/>},
     {label:"Team", link: "/team", icon : <MdGroupWork/>},
     {label:"Trashed", link: "/trashed", icon : <MdDelete/>},
     {label:"Settings", link: "/settings", icon : <MdSettings/>},

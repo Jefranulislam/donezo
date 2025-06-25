@@ -10,8 +10,7 @@ import TaskDialog from "./TaskDialog";
 import { useState } from "react";
 import { BiMessageAltDetail } from "react-icons/bi";
 import { FaList } from "react-icons/fa";
-
-
+import { useNavigate } from "react-router-dom";
 
 // Helper to format ISO date to DD-MM-YYYY
 function formatDate(dateString) {
@@ -45,12 +44,19 @@ const ICONS = {
 
 const TaskCard = ({ task }) => {
   const { user } = useSelector((state) => state.auth);
-  // eslint-disable-next-line no-unused-vars
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/task/${task._id}`);
+  };
 
   return (
     <>
-      <div className="w-full h-fit bg-white shadow-md p-4 mt-3">
+      <div
+        className="w-full h-fit bg-white shadow-md p-4 mt-3 cursor-pointer hover:shadow-lg transition"
+        onClick={handleCardClick}
+      >
         <div
           className={clsx(
             "flex flex-1 gap-1 items-center text-sm font-medium",
