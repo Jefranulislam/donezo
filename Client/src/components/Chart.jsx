@@ -4,7 +4,8 @@ import { BarChart, Bar, XAxis, ResponsiveContainer, YAxis, Tooltip, CartesianGri
 
 const Chart = () => {
   return (
-    <ResponsiveContainer width={"100%"} height={500} >
+    <ResponsiveContainer className="w-1/3" >
+      
         <BarChart 
             width={150}
             height={100}

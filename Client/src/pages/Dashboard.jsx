@@ -100,7 +100,7 @@ const Dashboard = () => {
   )
 
   const TaskTable = () => (
-    <div className="w-full md:w-2/3 bg-white px-2 md:px-4 pt-4 pb-4 shadow-md rounded mt-8">
+    <div className="bg-white px-2 md:px-4 pt-4 pb-4 shadow-md rounded mt-8">
       <h2 className="text-lg font-semibold mb-2">Tasks</h2>
       <table className="w-full">
         <TableHeader />
@@ -173,23 +173,26 @@ const Dashboard = () => {
   )
 
   return (
-    <div className="p-4 w-full">
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-      <div className="grid  grid-cols-3 w-full">
-        <div className="col-span-3 flex flex-row flex-wrap gap-6">
-          {stats.map(({ icon, bg, label, total }, index) => (
-            <Card key={index} icon={icon} bg={bg} label={label} count={total} />
-          ))}
-        </div>
-        <div className="col-span-1 ">
-          <UserTable />
-        </div>
-        <div className="col-span-3 ">
-          <TaskTable />
-        </div>
-        <div className="col-span-1  ">
-          <Chart />
-        </div>
+    <div className="p-4 w-full ">
+      <h1 className="text-2xl font-bold mb-6 text-gray-900">Dashboard</h1>
+      <div className="grid  grid-cols-3 gap-4 w-full bg-violet-100">
+              <div className="col-span-3 gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                {stats.map(({ icon, bg, label, total }, index) => (
+                  <Card key={index} icon={icon} bg={bg} label={label} count={total} />
+                ))}
+              </div>
+
+          <div className=" grid items-end ">
+            <Chart/> 
+          </div>
+
+          <div className=" col-span-2 ">
+            <TaskTable />
+          </div>
+
+          <div className="col-span-3">
+           <UserTable />
+          </div>
       </div>
     </div>
   )
