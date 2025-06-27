@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import clsx from "clsx";
 import {
   MdAttachFile,
@@ -11,6 +12,7 @@ import { useState } from "react";
 import { BiMessageAltDetail } from "react-icons/bi";
 import { FaList } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import AddSubTask from "./AddSubTask";
 
 // Helper to format ISO date to DD-MM-YYYY
 function formatDate(dateString) {
@@ -59,21 +61,31 @@ const TaskCard = ({ task }) => {
       >
         <div
           className={clsx(
-            "flex flex-1 gap-1 items-center text-sm font-medium",
+            " gap-2 grid grid-cols-2 text-sm font-medium w-full ",
             PRIORITY_STYLES[task?.priority]
-          )}>
+          )}
+        >
+          <div className="flex">
+         
           <span className="text-lg">{ICONS[task?.priority]}</span>
           <span className="uppercase">{task?.priority}</span>
-          {user?.isAdmin && <TaskDialog task={task} />}
+          </div>
+           <div className="flex justify-end">
+          <TaskDialog task={task} /></div>
+          
         </div>
+
 
         <div className="flex items-center gap-2 mt-2">
           <div></div>
           <div
             className={clsx("w-4 h-4 rounded-full", TASK_TYPE[task?.stage])}
           ></div>
-          <span className="capitalize text-xs text-gray-500">{task?.stage}</span>
+          <span className="capitalize text-xs text-gray-500">
+            {task?.stage}
+          </span>
         </div>
+
         {/* Render formatted date if available */}
         {task?.date && (
           <div className="mt-2 text-xs text-gray-500">
@@ -81,34 +93,33 @@ const TaskCard = ({ task }) => {
           </div>
         )}
         <div>
-          <span className="text-sm capitalize font-semibold text-gray-950 line-clamp-1">{task?.title}</span>
+          <span className="text-sm capitalize font-semibold text-gray-950 line-clamp-1">
+            {task?.title}
+          </span>
         </div>
+
         <div className="w-ful border-t border-gray-200 my-2">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3 ">
-
-              <div className="flex gap-1 items-center text-sm p-2 text-gray-600 " >
-                    <BiMessageAltDetail/>
-              <span>  {task?.activities?.length}
-
-                  </span>
+              <div className="flex gap-1 items-center text-sm p-2 text-gray-600 ">
+                <BiMessageAltDetail />
+                <span> {task?.activities?.length}</span>
               </div>
-              <div className="flex gap-1 items-center text-sm p-2 text-gray-600 " >
-                    <MdAttachFile/>
-              <span>  {task?.assets?.length}
-
-                  </span>
+              <div className="flex gap-1 items-center text-sm p-2 text-gray-600 ">
+                <MdAttachFile />
+                <span> {task?.assets?.length}</span>
               </div>
-              <div className="flex gap-1 items-center text-sm p-2 text-gray-600 " >
-                    <FaList/>
-              <span>  {task?.subTasks?.length}
-
-                  </span>
+              <div className="flex gap-1 items-center text-sm p-2 text-gray-600 ">
+                <FaList />
+                <span> {task?.subTasks?.length}</span>
               </div>
             </div>
             <div className="flex flex-row-reverse">
               {task?.team?.map((member, index) => (
-                <div key={index} className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-xs font-semibold text-gray-700 bg-gray-100 ml-1">
+                <div
+                  key={index}
+                  className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center text-xs font-semibold text-gray-700 bg-gray-100 ml-1"
+                >
                   {member?.name?.charAt(0).toUpperCase()}
                 </div>
               ))}
@@ -135,9 +146,22 @@ const TaskCard = ({ task }) => {
             </div>
           )}
         </div>
+        <div className="w-full pb-2">
+          <button
+            disabled={!user?.isAdmin}
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(true);
+            }}
+            className="w-full flex gap-4 items-center text-sm text-gray-500 font-semibold border border-gray-300 rounded py-2 px-3 hover:bg-gray-100 disabled:opacity-50"
+            type="button"
+          >
+            <div className="text-lg" />
+            Add SubTask
+          </button>
+        </div>
 
-
-        {/* <AddSubTask id={task._id}  open={open} setOpen={setOpen}/> */}
+        <AddSubTask id={task._id} open={open} setOpen={setOpen} />
       </div>
     </>
   );

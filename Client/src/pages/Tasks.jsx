@@ -12,6 +12,7 @@ import TaskTitle from "../components/TaskTitle";
 import BoardView from "../components/BoardView";
 import { tasks } from "../assets/data";
 import Table from "../components/Table";
+import AddTask from "../components/AddTask";
 
 const TABS = [
   { title: "Board View", icon: <MdGridView /> },
@@ -19,30 +20,18 @@ const TABS = [
 ];
 
 const TASK_TYPE = {
-  todo: "bg-blue-400",
+  "todo": "bg-blue-400",
   "in progress": "bg-yellow-400",
-  completed: "bg-green-400",
+  "completed": "bg-green-400",
 };
 
 // Map possible status route params to canonical task stage values
 const STATUS_MAP = {
-  todo: "todo",
   "to-do": "todo",
-  "to do": "todo",
-  "inprocess": "in progress",
   "in-process": "in progress",
-  "in progress": "in progress",
-  completed: "completed",
+  "completed": "completed",
 };
 
-const normalizeStatus = status => {
-  if (!status) return "";
-  const key = status.replace(/\s|-/g, "").toLowerCase();
-  if (key === "todo") return "todo";
-  if (key === "inprocess") return "in progress";
-  if (key === "completed") return "completed";
-  return status.replace(/\s+/g, "").toLowerCase();
-};
 
 const Tasks = () => {
   const params = useParams();
@@ -50,12 +39,8 @@ const Tasks = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const statusParam = params.status || "";
-  const normalizedStatus = normalizeStatus(statusParam);
 
-  // Filter tasks by normalized status if present in params
-  const filteredTasks = statusParam
-    ? tasks.filter(task => normalizeStatus(task.stage) === normalizedStatus)
-    : tasks;
+
 
   return loading ? (
     <div className="py-10">
@@ -64,6 +49,7 @@ const Tasks = () => {
   ) : (
     <div className="w-full">
       <div className="flex items-center justify-between mb-4">
+        <AddTask open={open} setOpen ={setOpen}/>
         <Title title={statusParam ? `${statusParam} Tasks ` : "Tasks"} />
         {!statusParam && (
           <Button
@@ -73,6 +59,7 @@ const Tasks = () => {
             <IoIosAdd className="text-lg" />
             Add Task
           </Button>
+          
         )}
       </div>
       <Tabs tabs={TABS} setSelected={setSelected}>
@@ -84,12 +71,12 @@ const Tasks = () => {
           </div>
         )}
         {selected === 0 ? (
-          <BoardView tasks={filteredTasks} className="w-full">
+          <BoardView tasks={tasks} className="w-full">
             {/* Board View Component */}
             <p>Board View Content</p>
           </BoardView>
         ) : (
-          <Table className="w-full" tasks={filteredTasks}>
+          <Table className="w-full" tasks={tasks}>
             {/* List View Component */}
             <p>List View Content</p>
           </Table>

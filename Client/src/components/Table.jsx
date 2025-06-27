@@ -10,6 +10,10 @@ import {
 } from "react-icons/md";
 import { toast } from "sonner";
 import { FaList } from "react-icons/fa";
+import { Dialog } from "@headlessui/react";
+import Dialogs from "./Dialogs";
+import TaskDialog from "./TaskDialog";
+import TableActions from "./TableActions";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -39,6 +43,7 @@ const TableHeader = () => (
         Created At
       </th>
       <th className="py-2 text-left text-black">Assets</th>
+      <th className="py-2 text-left text-black">Actions</th>
     </tr>
   </thead>
 );
@@ -88,12 +93,20 @@ const TableRow = ({ task }) => (
         </div>
       </div>
     </td>
+
+
   </tr>
 );
 
+
+
 const Table = ({ tasks }) => {
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selected, setSelected] = useState(null);
+ const [selected ,setSelected]= useState(false);
+const [openDialog ,setOpenDialog]= useState(null);
+const deleteClicks = (id)=>
+  { setSelected(id) ; setOpenDialog(true)};
+const deleteHandler = ()=>{};
+
 
   return (
     <div className="bg-white px-2 md:px-4 pt-4 pb-9 shadow-md rounded" style={{ paddingTop: "1rem" }}>
@@ -107,6 +120,7 @@ const Table = ({ tasks }) => {
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };

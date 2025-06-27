@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { IoMdAdd } from "react-icons/io";
 import { summary } from '../assets/data';
 import clsx from "clsx";
+import AddUser from '../components/AddUser';
 
 // Placeholder TableHeader and TableRow
 const TableHeader = () => (
@@ -43,10 +44,15 @@ const Users = () => {
   const [openAction, setOpenAction] = useState(false);
   const [selected, setSelected] = useState(null);
 
+  const [users, setUsers] = useState(summary.users || []);
 
+  const handleAddUser = (user) => {
+    setUsers([...users, user]);
+  };
 
   return (
-    <div className='bg-white  px-2 md:px-4 pt-4 pb-9 shadow-md rounded text-black'>
+   <div className='bg-white  px-2 md:px-4 pt-4 pb-9 shadow-md rounded text-black'>
+      <AddUser open={open} setOpen={setOpen} onAdd={handleAddUser} />
       <div className='flex items-center justify-between mb-8'>
         <h2 className="text-xl font-bold">Team Members</h2>
         <button
@@ -61,7 +67,7 @@ const Users = () => {
         <table className='w-full mb-5'>
           <TableHeader />
           <tbody>
-            { summary.users?.map((user, index) => (
+            {users.map((user, index) => (
               <TableRow key={index} user={user} />
             ))}
           </tbody>
