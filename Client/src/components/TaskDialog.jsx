@@ -65,7 +65,7 @@ const TaskDialog = ({ task }) => {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <MenuItems className="absolute right-0 mt-2 w-56 origin-top-right divide-y bg-white shadow-lg ring-1 ring-white-5 divide-gray-100 rounded-md focus:outline-none z-50">
+        <MenuItems className="absolute right-0 mt-2 w-56 origin-top-right divide-y shadow-lg ring-1 ring-white-5 divide-gray-100 rounded-md focus:outline-none z-50">
           <div className="px-1 py-1 space-y-2">
             {items.map((el) => (
               <MenuItem key={el.label}>

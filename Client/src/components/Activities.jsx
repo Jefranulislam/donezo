@@ -37,22 +37,67 @@ const TASKTYPEICON = {
   ),
 };
 
+import api from '../utils/api';
+
 const Activities = ({ activity = [], id }) => {
   const [text, setText] = useState("");
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [comments, setComments] = useState(activity);
+
+  // Refetch activities/comments after new comment
+  const fetchActivities = async () => {
+    try {
+      const res = await api.get(`/task/${id}`);
+      setComments(res.data.activities || []);
+    } catch (e) {}
+  };
+
+  const handleComment = async (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+    setCommentLoading(true);
+    try {
+      await api.post(`/task/${id}/comment`, { comment: text });
+      setText("");
+      await fetchActivities();
+    } catch (err) {
+      // Optionally show error
+    } finally {
+      setCommentLoading(false);
+    }
+  };
 
   return (
     <div className='w-full flex gap-10 2xl:gap-20 min-h-screen px-10 py-8 bg-white shadow rounded-md justify-between overflow-y-auto'>
       <div className='w-full md:w-1/2'>
         <h4 className='text-gray-600 font-semibold text-lg mb-5'>Activities</h4>
         <div className="w-full space-y-4">
-          {activity && activity.length > 0 ? (
-            activity.map((el, index) => (
-              <Card key={index} item={el} isLast={index === activity.length - 1} />
+          {comments && comments.length > 0 ? (
+            comments.map((el, index) => (
+              <Card key={index} item={el} isLast={index === comments.length - 1} />
             ))
           ) : (
             <span className="text-gray-400">No activities yet.</span>
           )}
         </div>
+        {/* Comment Section */}
+        <form onSubmit={handleComment} className="mt-8 flex gap-2 items-center">
+          <input
+            type="text"
+            className="flex-1 border border-gray-300  text-gray-800 rounded px-3 py-2 focus:outline-none"
+            placeholder="Add a comment..."
+            value={text}
+            onChange={e => setText(e.target.value)}
+            disabled={commentLoading}
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+            disabled={commentLoading || !text.trim()}
+          >
+            {commentLoading ? 'Posting...' : 'Comment'}
+          </button>
+        </form>
       </div>
     </div>
   );
@@ -68,7 +113,7 @@ const Card = ({ item, isLast }) => (
       </div>
       {/* Vertical line except for last item */}
       {!isLast && (
-        <div className="w-0.5 bg-gray-300 h-full my-1" style={{ minHeight: 32 }} />
+        <div className="w-0.5 bg-gray-600 h-full my-1" style={{ minHeight: 32 }} />
       )}
     </div>
     {/* Activity Content */}

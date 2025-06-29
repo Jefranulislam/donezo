@@ -17,19 +17,17 @@ dbConnection();
 const app = express();
 
 app.use(cors({
-   origin :[ 'http://localhost:9000'],
-   method : ["GET" , "POST", "PUT", "DELETE"],
-
-   credential : true,
-}))
-
+  origin: ['http://localhost:3000'],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+}));
 
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 app.use(morgan("dev"));
-app.use("api", router);
+app.use("/api", router);
 
 app.use(routeNotFound);
 app.use(errorHandler);

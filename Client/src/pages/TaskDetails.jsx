@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaBug, FaTasks, FaThumbsUp, FaUser } from 'react-icons/fa';
 import { GrInProgress } from "react-icons/gr";
 import {
@@ -13,11 +13,13 @@ import {
 import { RxActivityLog } from "react-icons/rx";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { tasks } from '../assets/data';
 import Tabs from '../components/Tabs'; // Import the Tabs component
 import clsx from 'clsx';
 import Activities from '../components/Activities'; // Import the Activities component
+import api from '../utils/api';
 
+import { fetchTaskById, updateTask, removeTask } from "../utils/taskService";
+import EditTaskButton from '../components/EditTaskButton';
 
 const assets = [
   "https://images.pexels.com/photos/2534523/pexels-photo-2534523.jpeg?auto=compress&w=500",
@@ -78,17 +80,39 @@ const act_types = ["Started", "Completed", "in progress", "Commented", "Assigned
 
 const TaskDetails = () => {
 
- const { id } = useParams();
-    const [selected, setSelected] = useState(0);
-    // Find the task by id from the route param
-    const task = tasks.find(t => t._id === id);
+const { id } = useParams();
+const [task, setTask] = useState(null);
+const [loading, setLoading] = useState(true);
+const [selected, setSelected] = useState(0);
 
-
+useEffect(() => {
+  setLoading(true);
+  fetchTaskById(id)
+    .then(setTask)
+    .finally(() => setLoading(false));
+}, [id]);
 
   
+const handleUpdate = async (updatedData) => {
+  const updated = await updateTask(id, updatedData);
+  setTask(updated);
+};
+
+const handleDelete = async () => {
+  await removeTask(id);
+  // Redirect or update UI as needed
+};
   return (
     <div id='TaskDetails' className='w-full flex flex-col gap-3 mb-4 overflow-y-hidden'>
       <h1 className='text-2xl text-gray-600 font-bold'>{task?.title}</h1>
+      {/* Edit Task Button */}
+      <div className="flex items-center mb-2">
+        {task && <EditTaskButton task={task} onTaskUpdated={async () => {
+          // Refetch task after edit
+          const updated = await fetchTaskById(id);
+          setTask(updated);
+        }} />}
+      </div>
       <Tabs tabs={TABS} setSelected={setSelected}>
         {selected === 0 && (
           <div className='w-full flex flex-col md:flex-row gap-5 2xl:gap-8 p-8 overflow-y-auto'>

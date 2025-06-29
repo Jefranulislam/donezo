@@ -1,10 +1,11 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
 import moment from "moment";
 import { BiSolidMessageRounded } from "react-icons/bi";
 import { HiBellAlert } from "react-icons/hi2";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
+import api from "../utils/api";
 
 // Icon mapping
 const ICONS = {
@@ -19,80 +20,94 @@ const ICONS = {
   ),
 };
 
-const data = [
-  {
-    id: "65c5f12ab5204a81bde866ab",
-    team: [
-      "65c202d4aa62f32ffd1303cc",
-      "65c30b96e639681a13def0b5",
-      "65c317360fd860f958baa08e",
-    ],
-    text: "New task has been assigned to you and 2 others. The task priority is set as high priority, so check and act accordingly. The task date is Fri Feb 09 2024. Thank you!",
-    task: {
-      title: "Test task",
-    },
-    notiType: "alert",
-    isRead: false,
-    createdAt: "2024-02-08T10:15:00.000Z",
-    updatedAt: "2024-02-08T10:15:00.000Z",
-  },
-  {
-    id: "65c5f12ab5204a81bde866ac",
-    team: [
-      "65c202d4aa62f32ffd1303cc",
-      "65c30b96e639681a13def0b5",
-    ],
-    text: "You have a new message from your team lead. Please check your inbox for details.",
-    task: {
-      title: "Message from Team Lead",
-    },
-    notiType: "message",
-    isRead: false,
-    createdAt: "2024-02-10T09:00:00.000Z",
-    updatedAt: "2024-02-10T09:00:00.000Z",
-  },
-  {
-    id: "65c5f12ab5204a81bde866ad",
-    team: ["65c317360fd860f958baa08e"],
-    text: "Reminder: The project deadline is approaching. Please update your progress.",
-    task: {
-      title: "Project Deadline Reminder",
-    },
-    notiType: "notification",
-    isRead: true,
-    createdAt: "2024-02-11T14:30:00.000Z",
-    updatedAt: "2024-02-11T14:30:00.000Z",
-  },
-  {
-    id: "65c5f12ab5204a81bde866ae",
-    team: [
-      "65c202d4aa62f32ffd1303cc",
-      "65c317360fd860f958baa08e",
-    ],
-    text: "Task 'Design Review' has been marked as completed by your teammate.",
-    task: {
-      title: "Design Review",
-    },
-    notiType: "alert",
-    isRead: false,
-    createdAt: "2024-02-12T16:45:00.000Z",
-    updatedAt: "2024-02-12T16:45:00.000Z",
-  },
-];
-
+// const data = [
+//   {
+//     id: "65c5f12ab5204a81bde866ab",
+//     team: [
+//       "65c202d4aa62f32ffd1303cc",
+//       "65c30b96e639681a13def0b5",
+//       "65c317360fd860f958baa08e",
+//     ],
+//     text: "New task has been assigned to you and 2 others. The task priority is set as high priority, so check and act accordingly. The task date is Fri Feb 09 2024. Thank you!",
+//     task: {
+//       title: "Test task",
+//     },
+//     notiType: "alert",
+//     isRead: false,
+//     createdAt: "2024-02-08T10:15:00.000Z",
+//     updatedAt: "2024-02-08T10:15:00.000Z",
+//   },
+//   {
+//     id: "65c5f12ab5204a81bde866ac",
+//     team: [
+//       "65c202d4aa62f32ffd1303cc",
+//       "65c30b96e639681a13def0b5",
+//     ],
+//     text: "You have a new message from your team lead. Please check your inbox for details.",
+//     task: {
+//       title: "Message from Team Lead",
+//     },
+//     notiType: "message",
+//     isRead: false,
+//     createdAt: "2024-02-10T09:00:00.000Z",
+//     updatedAt: "2024-02-10T09:00:00.000Z",
+//   },
+//   {
+//     id: "65c5f12ab5204a81bde866ad",
+//     team: ["65c317360fd860f958baa08e"],
+//     text: "Reminder: The project deadline is approaching. Please update your progress.",
+//     task: {
+//       title: "Project Deadline Reminder",
+//     },
+//     notiType: "notification",
+//     isRead: true,
+//     createdAt: "2024-02-11T14:30:00.000Z",
+//     updatedAt: "2024-02-11T14:30:00.000Z",
+//   },
+//   {
+//     id: "65c5f12ab5204a81bde866ae",
+//     team: [
+//       "65c202d4aa62f32ffd1303cc",
+//       "65c317360fd860f958baa08e",
+//     ],
+//     text: "Task 'Design Review' has been marked as completed by your teammate.",
+//     task: {
+//       title: "Design Review",
+//     },
+//     notiType: "alert",
+//     isRead: false,
+//     createdAt: "2024-02-12T16:45:00.000Z",
+//     updatedAt: "2024-02-12T16:45:00.000Z",
+//   },
+// ];
 const NotificationPanel = () => {
-    // const {data, refetch}= useGetNotificationsQuery();
-    // const [markAsRead] = useMarkAsReadMutation(); 
-        
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchNotifications = () => {
+    setLoading(true);
+    api.get("/user/notifications")
+      .then(res => setNotifications(res.data))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const markAsRead = async (notificationId) => {
+    await api.put("/user/notifications/read", { notificationId });
+    fetchNotifications();
+  };
 
   return (
-    <Popover className="relative">  
+    <Popover className="relative">
       <Popover.Button className="inline-flex items-center outline-none">
         <div className="w-8 h-8 flex items-center justify-center text-gray-800 relative">
           <IoIosNotificationsOutline className="text-2xl" />
-          {data?.length > 0 && (
+          {notifications.length > 0 && (
             <span className="absolute text-center top-0 right-0 text-sm text-white font-semibold w-4 h-4 rounded-full bg-red-600">
-              {data?.length}
+              {notifications.length}
             </span>
           )}
         </div>
@@ -108,12 +123,12 @@ const NotificationPanel = () => {
       >
         <Popover.Panel className="absolute right-0 z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-2">
-            {data.length === 0 && (
+            {notifications.length === 0 && (
               <div className="px-4 py-2 text-sm text-gray-500">No notifications</div>
             )}
-            {data.map((item) => (
+            {notifications.map((item) => (
               <div
-                key={item.id}
+                key={item._id || item.id}
                 className="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer"
                 title={item.text}
               >
@@ -128,7 +143,7 @@ const NotificationPanel = () => {
         </Popover.Panel>
       </Transition>
     </Popover>
-  )
-}
+  );
+};
 
-export default NotificationPanel
+export default NotificationPanel;

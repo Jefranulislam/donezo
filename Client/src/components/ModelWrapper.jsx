@@ -28,7 +28,7 @@ const ModalWrapper = ({ open, setOpen, closeDialog, children }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black bg-opacity-60 transition-opacity" />
+          <div className="fixed inset-0 shadow-m transition-opacity opacity-35 bg-black" />
         </Transition.Child>
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">

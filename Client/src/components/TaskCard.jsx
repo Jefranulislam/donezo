@@ -68,7 +68,7 @@ const TaskCard = ({ task }) => {
           <div className="flex">
          
           <span className="text-lg">{ICONS[task?.priority]}</span>
-          <span className="uppercase">{task?.priority}</span>
+          <span className="uppercase text-gray-800 ">{task?.priority}</span>
           </div>
            <div className="flex justify-end">
           <TaskDialog task={task} /></div>
@@ -81,7 +81,7 @@ const TaskCard = ({ task }) => {
           <div
             className={clsx("w-4 h-4 rounded-full", TASK_TYPE[task?.stage])}
           ></div>
-          <span className="capitalize text-xs text-gray-500">
+          <span className="capitalize text-m text-gray-500">
             {task?.stage}
           </span>
         </div>

@@ -10,9 +10,10 @@ import { IoIosAdd } from "react-icons/io";
 import Tabs from "../components/Tabs";
 import TaskTitle from "../components/TaskTitle";
 import BoardView from "../components/BoardView";
-import { tasks } from "../assets/data";
 import Table from "../components/Table";
 import AddTask from "../components/AddTask";
+import { useEffect } from "react";
+import api from "../utils/api";
 
 const TABS = [
   { title: "Board View", icon: <MdGridView /> },
@@ -33,13 +34,43 @@ const STATUS_MAP = {
 };
 
 
+
+
 const Tasks = () => {
   const params = useParams();
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const statusParam = params.status || "";
 
+
+const [tasks, setTasks] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  setLoading(true);
+  api.get("/task")
+    .then(res => setTasks(res.data))
+    .finally(() => setLoading(false));
+}, []);
+
+
+
+
+
+
+
+
+const fetchTasks = () => {
+  setLoading(true);
+  api.get("/task")
+    .then(res => setTasks(res.data))
+    .finally(() => setLoading(false));
+};
+
+
+useEffect(() => {
+  fetchTasks();
+}, []);
 
 
   return loading ? (
@@ -49,7 +80,7 @@ const Tasks = () => {
   ) : (
     <div className="w-full">
       <div className="flex items-center justify-between mb-4">
-        <AddTask open={open} setOpen ={setOpen}/>
+     <AddTask open={open} setOpen={setOpen} onTaskAdded={(task) => setTasks(prev => [...prev, task])} />
         <Title title={statusParam ? `${statusParam} Tasks ` : "Tasks"} />
         {!statusParam && (
           <Button
@@ -70,17 +101,19 @@ const Tasks = () => {
             <TaskTitle label="Completed" className={TASK_TYPE.completed} />
           </div>
         )}
-        {selected === 0 ? (
-          <BoardView tasks={tasks} className="w-full">
-            {/* Board View Component */}
-            <p>Board View Content</p>
-          </BoardView>
-        ) : (
-          <Table className="w-full" tasks={tasks}>
-            {/* List View Component */}
-            <p>List View Content</p>
-          </Table>
-        )}
+       {selected === 0 ? (
+         <BoardView
+           tasks={statusParam ? tasks.filter(t => t.stage === STATUS_MAP[statusParam]) : tasks}
+           filterStage={statusParam ? STATUS_MAP[statusParam] : undefined}
+           className="w-full"
+         />
+       ) : (
+         <Table
+           className="w-full"
+           tasks={statusParam ? tasks.filter(t => t.stage === STATUS_MAP[statusParam]) : tasks}
+           hideColumns={statusParam ? ["todo", "in progress", "completed"].filter(s => s !== STATUS_MAP[statusParam]) : []}
+         />
+       )}
       </Tabs>
     </div>
   );

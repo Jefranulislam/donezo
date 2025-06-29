@@ -1,11 +1,11 @@
-import { useReducer } from "react";
-import userSchema from "../models/user";
+import User from "../models/user.js";
 import { createJWT } from "../index.js";
+import asyncHandler from "express-async-handler";
 // POST request - login user
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await userSchema.findOne({ email });
+  const user = await User.findOne({ email });
 
   if (!user) {
     return res
@@ -39,7 +39,7 @@ const loginUser = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, isAdmin, role, title } = req.body;
 
-  const userExists = await userSchema.findOne({ email });
+  const userExists = await User.findOne({ email });
 
   if (userExists) {
     return res
@@ -47,7 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
       .json({ status: false, message: "Email address already exists" });
   }
 
-  const user = await userSchema.create({
+  const user = await User.create({
     name,
     email,
     password,
@@ -82,7 +82,7 @@ const logoutUser = (req, res) => {
 // const getUserProfile = asyncHandler(async (req, res) => {
 //   const { userId } = req.user;
 
-//   const user = await UserSchema.findById(userId);
+//   const user = await User.findById(userId);
 
 //   user.password = undefined;
 
@@ -110,7 +110,7 @@ const getTeamList = asyncHandler(async (req, res) => {
     query = { ...query, ...searchQuery };
   }
 
-  const user = await userSchema.find(query).select("name title role email isActive");
+  const user = await User.find(query).select("name title role email isActive");
 
   res.status(201).json(user);
 });
@@ -131,7 +131,7 @@ const getNotificationsList = asyncHandler(async (req, res) => {
 
 // @GET  - get user task status
 const getUserTaskStatus = asyncHandler(async (req, res) => {
-  const tasks = await userSchema.find()
+  const tasks = await User.find()
     .populate("tasks", "title stage")
     .sort({ _id: -1 });
 
@@ -175,7 +175,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       ? _id
       : userId;
 
-  const user = await userSchema.findById(id);
+  const user = await User.findById(id);
 
   if (user) {
     user.name = req.body.name || user.name;
@@ -201,7 +201,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 const activateUserProfile = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const user = await userSchema.findById(id);
+  const user = await User.findById(id);
 
   if (user) {
     user.isActive = req.body.isActive;
@@ -232,7 +232,7 @@ const changeUserPassword = asyncHandler(async (req, res) => {
     });
   }
 
-  const user = await userSchema.findById(userId);
+  const user = await User.findById(userId);
 
   if (user) {
     user.password = req.body.password;
@@ -254,7 +254,7 @@ const changeUserPassword = asyncHandler(async (req, res) => {
 const deleteUserProfile = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  await userSchema.findByIdAndDelete(id);
+  await User.findByIdAndDelete(id);
 
   res.status(200).json({ status: true, message: "User deleted successfully" });
 });

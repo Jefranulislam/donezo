@@ -4,7 +4,12 @@ import {
   getTaskById,
   createTask,
   updateTask,
-  deleteTask
+  deleteTask,
+  restoreTask,
+  deleteTaskPermanently,
+  restoreAllTasks,
+  deleteAllTrashedTasks,
+  addTaskComment
 } from "../controllers/taskControllers.js";
 import { duplicateTask } from "../controllers/taskControllers.js";
 
@@ -19,6 +24,16 @@ router.post("/", createTask);
 // Update a task
 router.put("/:id", updateTask);
 // Delete a task
+
+// Add a comment to a task
+router.post("/:id/comment", addTaskComment);
+
+
+
+router.put("/:id/restore", restoreTask);
+router.delete("/:id", deleteTaskPermanently);
+router.put("/restore-all", restoreAllTasks);
+router.delete("/delete-all", deleteAllTrashedTasks);
 
 
 router.delete("/:id", deleteTask);

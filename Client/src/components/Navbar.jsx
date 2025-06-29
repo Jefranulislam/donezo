@@ -27,33 +27,9 @@ const Navbar = () => {
         <div className="flex h-16 justify-between">
           <div className="flex px-2 lg:px-0">
             
-            <div className="hidden lg:ml-6 lg:flex lg:space-x-8">
-              {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-              <a
-                href="#"
-                className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
-              >
-                Dashboard
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              >
-                Team
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              >
-                Projects
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
-              >
-                Calendar
-              </a>
-            </div>
+
+
+
           </div>
           <div className="flex flex-1 items-center justify-center px-2 lg:ml-6 lg:justify-end">
             <div className="grid w-full max-w-lg grid-cols-1 lg:max-w-xs">

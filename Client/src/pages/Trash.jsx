@@ -8,10 +8,18 @@ import {
   MdKeyboardDoubleArrowUp,
   MdOutlineRestore,
 } from "react-icons/md";
-import { summary, tasks } from "../assets/data";
 import Dialogs from "../components/Dialogs";
 import Title from "../components/Title";
 import { Button } from "@headlessui/react";
+
+import { useEffect } from "react";
+import {
+  restoreTask,
+  deleteTaskPermanently,
+  restoreAllTasks,
+  deleteAllTrashedTasks,
+  fetchTasks
+} from "../utils/taskService";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -103,11 +111,36 @@ const Trash = () => {
     setMsg("Do you want to restore all items in the trash?");
     setOpenDialog(true);
   };
-  const handleDialogConfirm = () => {
-    // TODO: Implement actual logic for delete/restore
-    setOpenDialog(false);
-    setSelected(null);
-  };
+ const handleDialogConfirm = async () => {
+  if (type === "deleteAll") {
+    await deleteAllTrashedTasks();
+  } else if (type === "restoreAll") {
+    await restoreAllTasks();
+  } else if (type === "delete" && selected) {
+    await deleteTaskPermanently(selected._id);
+  } else if (type === "restore" && selected) {
+    await restoreTask(selected._id);
+  }
+  setOpenDialog(false);
+  setSelected(null);
+  fetchTrashedTasks(); // Refresh list
+};
+
+
+
+  const [tasks, setTasks] = useState([]);
+const [loading, setLoading] = useState(true);
+
+const fetchTrashedTasks = () => {
+  setLoading(true);
+  fetchTasks()
+    .then(all => setTasks(all.filter(t => t.isTrashed)))
+    .finally(() => setLoading(false));
+};
+
+useEffect(() => {
+  fetchTrashedTasks();
+}, []);
 
   return (
     <div className="w-full px-2 md:px-4 pt-4 pb-9 shadow-md rounded bg-white text-gray-950">

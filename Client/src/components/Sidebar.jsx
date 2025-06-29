@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { setOpenSidebar } from '../redux/slices/authSlice';
 import clsx from 'clsx';
+import DoneZoLogo from "../assets/DoneZoLogo.png"
 
 import { Link } from 'react-router-dom';
 const linkData = [
@@ -47,12 +48,11 @@ const Sidebar = () => {
     }
   return (
     <div className='w-full h-full flex flex-col gap-4 p-4 bg-white shadow-md'>
-        <h1 className='flex gap-1 items-center'>
-        <p className='bg-blue-600 p-2 rounded-b-full'> 
-            <MdOutlineAddTask className='text-white text-2xl font-black' />
-
-        </p>
-        <span className='text-2xl font-bold text-gray-800'>Donezo</span>
+        <h1 className='flex gap-2 items-center mb-2'>
+          <span className=''>
+            <img src={DoneZoLogo} alt="Donezo Logo" className="w-45 object-contain" />
+          </span>
+      
         </h1>
         <p className='text-gray-500'>Welcome, {user?.name}</p>
 
