@@ -16,14 +16,20 @@ const PORT = process.env.PORT;
 dbConnection();
 const app = express();
 
+
+
+const allowedOrigins = [
+  'https://donezo-mu.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000'
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://donezo-mu.vercel.app'
-  ],
+  origin: allowedOrigins,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
