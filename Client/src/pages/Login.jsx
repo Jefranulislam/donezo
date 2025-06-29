@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 
 
 const Login = () => {
@@ -12,9 +13,20 @@ const Login = () => {
    const navigate = useNavigate();
 
    const submitHandler = async (data) => {
-     // Save whatever is input as userInfo in cookie (for easy bypass)
-     document.cookie = `userInfo=${encodeURIComponent(JSON.stringify({ email: data.email, password: data.password }))}; path=/;`;
-     window.location.href = '/dashboard';
+     try {
+       // Send login request to backend
+       const res = await api.post('/user/login', {
+         email: data.email,
+         password: data.password
+       });
+       // Backend should set the JWT token cookie automatically (withCredentials: true)
+       // Optionally, you can store user info in localStorage or Redux here
+       window.location.href = '/dashboard';
+     } catch (err) {
+       alert(
+         err?.response?.data?.message || 'Login failed. Please check your credentials.'
+       );
+     }
    }
 
     useEffect(()=>{
