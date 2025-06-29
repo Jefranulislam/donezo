@@ -12,14 +12,9 @@ const Login = () => {
    const navigate = useNavigate();
 
    const submitHandler = async (data) => {
-     // Simple hardcoded check for demo: admin/admin
-     if (data.email === 'admin' && data.password === 'admin') {
-       // Save user info in cookie
-       document.cookie = `userInfo=${encodeURIComponent(JSON.stringify({ email: data.email }))}; path=/;`;
-       window.location.href = '/dashboard';
-     } else {
-       alert('Invalid credentials! Use admin/admin');
-     }
+     // Save whatever is input as userInfo in cookie (for easy bypass)
+     document.cookie = `userInfo=${encodeURIComponent(JSON.stringify({ email: data.email, password: data.password }))}; path=/;`;
+     window.location.href = '/dashboard';
    }
 
     useEffect(()=>{
